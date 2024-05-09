@@ -28,7 +28,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
         output1: ${{ steps.trivy-status.outputs.status }}
-        output2: ${{ steps.text_output.outputs.output }}
     steps:
       - name: Checkout Code
         id: text_output
@@ -52,11 +51,14 @@ jobs:
             echo "::set-output name=status::success"
             fi
 
+      - name: Generate text file
+        run: echo trivy-report.txt > output.txt
+
       - name: Upload text file
         uses: actions/upload-artifact@v2
         with:
-            name: trivy-report
-            path: trivy-report.txt
+            name: output-file
+            path: output.txt
      
       - name: Get script result
         run: echo "Script result was ${{ steps.trivy-status.outputs.status }}"
@@ -77,15 +79,14 @@ jobs:
       - name: Download text file
         uses: actions/download-artifact@v2
         with:
-            name: trivy-report
-            path: trivy-report
+            name: output-file
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file: ${{ needs.Scan_Code.outputs.output2 }}
+          file_name: output-file
           initial_comment: Scan report by He YaLi
      
   Slack_Success:  
