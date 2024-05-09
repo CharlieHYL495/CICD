@@ -39,7 +39,7 @@ jobs:
           severity: 'HIGH'
           output: trivy-report.txt 
 
-      - name: Find High in Trivy
+      - name: Set Trivy Status
         id: trivy-status
         run: |
             if [ -f "trivy-report.txt" ]; then
@@ -59,7 +59,7 @@ jobs:
    
   Slack_Failed:  
       needs: Scan_Code
-      if: ${{ needs.trivy-status.outputs.status }} == failure
+      if: ${{ needs.Scan_Code.outputs.status }} == failure
       runs-on: ubuntu-latest
       steps:
       - name: Failed Slack Notification 
@@ -67,7 +67,7 @@ jobs:
         env:
           SLACK_TITLE: 'Scan failed - He YaLi'
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_COLOR: '${{ needs.trivy-status.outputs.status }}' 
+          SLACK_COLOR: '${{ needs.Scan_Code.outputs.status }}' 
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
     
       - name: Download text file
@@ -86,7 +86,7 @@ jobs:
      
   Slack_Success:  
         needs: Scan_Code
-        if: ${{ needs.trivy-status.outputs.status }} == success
+        if: ${{ needs.Scan_Code.outputs.status }} == success
         runs-on: ubuntu-latest
         steps:
           - name: Install Cosign
@@ -141,5 +141,5 @@ jobs:
                     **Email**: [e1333156@u.nus.edu](e1333156@u.nus.edu) \n
                     **Git**: ${{ github.server_url }}/${{ github.repository }} \n
                     **Image**: [https://hub.docker.com/repository/docker/charliehe495/go-fortune/general](https://hub.docker.com/repository/docker/charliehe495/go-fortune/general)'
-                SLACK_COLOR: '${{ needs.trivy-status.outputs.status }}'
+                SLACK_COLOR: '${{ needs.Scan_Codeoutputs.status }}'
                 SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
