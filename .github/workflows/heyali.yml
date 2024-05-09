@@ -73,17 +73,13 @@ jobs:
         with:
             name: trivy-report
             path: trivy-report
-    #   - name: Display text file content
-    #     run: cat my-artifact/trivy-report.txt > trivy-report.txt
-      - name: Rename text file
-        run: mv trivy-report//trivy-report.txt trivy-report.txt
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file: trivy-report.txt
+          file: trivy-report//trivy-report.txt
           initial_comment: Scan report by He YaLi
      
   Slack_Success:  
