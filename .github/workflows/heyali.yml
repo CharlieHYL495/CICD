@@ -125,7 +125,7 @@ jobs:
               push: true
               tags: charliehe495/go-fortune:${{ github.sha }}
 
-          - name: Sign the images with GitHub OIDC Token
+          - name: Sign the images with Digest
             env:
                 DIGEST: ${{ steps.build-and-push.outputs.digest }}
                 TAGS: charliehe495/go-fortune:${{ github.sha }}
@@ -136,7 +136,7 @@ jobs:
                 for tag in ${TAGS}; do
                     images+="${tag}@${DIGEST} "
                 done
-                cosign sign --yes ${images}
+                cosign sign --yes --key env://COSIGN_PRIVATE_KEY ${images}
 
           - name: Slack Notification When trivy success
             uses: rtCamp/action-slack-notify@v2
