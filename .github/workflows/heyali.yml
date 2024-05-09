@@ -50,8 +50,8 @@ jobs:
       - name: Upload text file
         uses: actions/upload-artifact@v2
         with:
-            name: my-artifact
-            path: trivy-report.txt 
+            name: trivy-report
+            path: trivy-report.txt
      
       - name: Get script result
         run: echo "Script result was ${{ steps.trivy-status.outputs.status }}"
@@ -72,12 +72,12 @@ jobs:
       - name: Download text file
         uses: actions/download-artifact@v2
         with:
-            name: my-artifact
-            path: my-artifact
+            name: trivy-report
+            path: trivy-report
     #   - name: Display text file content
     #     run: cat my-artifact/trivy-report.txt > trivy-report.txt
       - name: Rename text file
-        run: mv my-artifact/trivy-report.txt trivy-report.txt
+        run: mv trivy-report//trivy-report.txt trivy-report.txt
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
