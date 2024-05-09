@@ -4,7 +4,8 @@ name: My CI_CD workflow
 on:
   push:
     branches:
-    - 'release/v[0-9]+.[0-9]+'
+    # - 'release/v[0-9]+.[0-9]+'
+      master
 
 jobs:
   # add comments to verify the commit check funciton
@@ -59,7 +60,7 @@ jobs:
           SLACK_TITLE: 'Scan failed - He YaLi'
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
           SLACK_COLOR: ${{ needs.trivy-status.outputs.status }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_TEST_URL }}  
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
@@ -106,6 +107,8 @@ jobs:
             env:
                 DIGEST: ${{ steps.build-and-push.outputs.digest }}
                 TAGS: charliehe495/go-fortune:${{ github.sha }}
+                COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+                COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
             run: |
                 images=""
                 for tag in ${TAGS}; do
