@@ -47,6 +47,12 @@ jobs:
             echo "::set-output name=status::success"
             fi
 
+      - name: Upload text file
+        uses: actions/upload-artifact@v2
+        with:
+            name: my-artifact
+            path: trivy-report.txt 
+     
       - name: Get script result
         run: echo "Script result was ${{ steps.trivy-status.outputs.status }}"
    
@@ -66,16 +72,17 @@ jobs:
       - name: Download text file
         uses: actions/download-artifact@v2
         with:
+            name: my-artifact
             path: my-artifact
       - name: Display text file content
-        run: cat my-artifact
+        run: cat my-artifact/trivy-report.txt
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'my-artifact'
+          file_path: 'my-artifact/trivy-report.txt'
           initial_comment: 'Scan report by He YaLi'
      
   Slack_Success:  
