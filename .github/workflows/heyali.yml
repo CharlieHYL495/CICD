@@ -44,11 +44,7 @@ jobs:
       - name: Set Trivy Status
         id: trivy-status
         run: |
-            if grep -q "HIGH" ouput.txt; then
             echo "::set-output name=status::failure"
-            else
-            echo "::set-output name=status::success"
-            fi
 
     #   - name: Generate text file
     #     run: echo trivy-report.txt > output.txt
