@@ -73,16 +73,18 @@ jobs:
         uses: actions/download-artifact@v2
         with:
             name: my-artifact
-            path: trivy-report.txt
+            path: my-artifact
     #   - name: Display text file content
     #     run: cat my-artifact/trivy-report.txt > trivy-report.txt
+      - name: Rename text file
+        run: mv my-artifact/trivy-report.txt trivy-report.txt
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'my-artifact/trivy-report.txt'
+          file_path: 'trivy-report.txt'
           initial_comment: 'Scan report by He YaLi'
      
   Slack_Success:  
