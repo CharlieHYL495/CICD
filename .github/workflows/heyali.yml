@@ -73,9 +73,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
             name: my-artifact
-            path: my-artifact
-      - name: Display text file content
-        run: cat my-artifact/trivy-report.txt
+            path: trivy-report.txt
+    #   - name: Display text file content
+    #     run: cat my-artifact/trivy-report.txt > trivy-report.txt
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
