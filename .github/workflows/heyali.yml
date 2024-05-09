@@ -35,14 +35,13 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'HIGH'
-          output: trivy.txt 
+          output: trivy-report.txt 
 
       - name: Find High in Trivy
         id: trivy-status
         run: |
             if [ -f "trivy-report.txt" ]; then
             echo "::set-output name=status::failure"
-            echo trivy.txt > trivy-report.txt
             else
             echo "::set-output name=status::success"
             fi
