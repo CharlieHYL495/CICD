@@ -59,7 +59,7 @@ jobs:
    
   Slack_Failed:  
       needs: Scan_Code
-      if: ${{ needs.Scan_Code.outputs.status }} == failure
+      if: needs.Scan_Code.outputs.status == 'failure'
       runs-on: ubuntu-latest
       steps:
       - name: Failed Slack Notification 
@@ -86,7 +86,7 @@ jobs:
      
   Slack_Success:  
         needs: Scan_Code
-        if: ${{ needs.Scan_Code.outputs.status }} == success
+        if: needs.Scan_Code.outputs.status == 'success'
         runs-on: ubuntu-latest
         steps:
           - name: Install Cosign
