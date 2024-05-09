@@ -45,7 +45,7 @@ jobs:
       - name: Set Trivy Status
         id: trivy-status
         run: |
-            if [ -f "trivy-report.txt" ]; then
+            if [ -f "output.txt" ]; then
             echo "::set-output name=status::failure"
             else
             echo "::set-output name=status::success"
