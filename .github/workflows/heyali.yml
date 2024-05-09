@@ -68,7 +68,7 @@ jobs:
         with:
             path: my-artifact
       - name: Display text file content
-        run: cat my-artifact/trivy-out-report.txt
+        run: cat my-artifact
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
