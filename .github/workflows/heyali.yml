@@ -4,8 +4,7 @@ name: WorkFlow
 on:
   push:
     branches:
-    # - 'release/v[0-9]+.[0-9]+'
-      master
+    - 'release/v[0-9]+.[0-9]+'
 
 jobs:
   # add comments to verify the commit check funciton
@@ -144,7 +143,7 @@ jobs:
                 SLACK_TITLE: 'Image build and signed'
                 SLACKIFY_MARKDOWN: 'true'
                 SLACK_MESSAGE: 
-                    '**Name**: He YaLi \n
+                    '**Name**: HE YALI \n
                     **Metriculation**: A0291660A \n
                     **Email**: [e1333156@u.nus.edu](e1333156@u.nus.edu) \n
                     **Git**: ${{ github.server_url }}/${{ github.repository }} \n
