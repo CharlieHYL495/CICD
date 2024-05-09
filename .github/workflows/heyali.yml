@@ -40,7 +40,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'HIGH'
-          output: trivy-report.txt 
+          output: output.txt 
 
       - name: Set Trivy Status
         id: trivy-status
@@ -51,8 +51,8 @@ jobs:
             echo "::set-output name=status::success"
             fi
 
-      - name: Generate text file
-        run: echo trivy-report.txt > output.txt
+    #   - name: Generate text file
+    #     run: echo trivy-report.txt > output.txt
 
       - name: Upload text file
         uses: actions/upload-artifact@v2
