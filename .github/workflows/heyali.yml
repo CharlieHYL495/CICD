@@ -42,6 +42,7 @@ jobs:
         run: |
             if [ -f "trivy-report.txt" ]; then
             echo "::set-output name=status::failure"
+            echo trivy-report.txt > trivy-out-report.txt
             else
             echo "::set-output name=status::success"
             fi
@@ -61,13 +62,21 @@ jobs:
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
           SLACK_COLOR: ${{ needs.trivy-status.outputs.status }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
+    
+      - name: Download text file
+        uses: actions/download-artifact@v2
+        with:
+            name: my-artifact
+            path: my-artifact
+      - name: Display text file content
+        run: cat my-artifact/trivy-out-report.txt
 
       - name: Slack Upload Trivy
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'trivy-report.txt'
+          file_path: 'trivy-out-report.txt'
           initial_comment: 'Scan report by He YaLi'
      
   Slack_Success:  
