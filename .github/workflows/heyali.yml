@@ -79,7 +79,7 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file: trivy-report//trivy-report.txt
+          file-name: trivy-report.txt
           initial_comment: Scan report by He YaLi
      
   Slack_Success:  
