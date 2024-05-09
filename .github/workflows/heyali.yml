@@ -40,12 +40,12 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL'
-          output: output.txt 
+          output: output.txt
 
       - name: Set Trivy Status
         id: trivy-status
         run: |
-            if [ -f "output.txt" ]; then
+            if wc -c < output.txt > 20; then
             echo "::set-output name=status::failure"
             else
             echo "::set-output name=status::success"
