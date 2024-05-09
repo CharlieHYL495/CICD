@@ -26,6 +26,8 @@ jobs:
 
   Scan_Code: 
     runs-on: ubuntu-latest
+    outputs:
+        output1: ${{ steps.trivy-status.outputs.status }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -60,26 +62,23 @@ jobs:
   Slack_Failed:  
       needs: Scan_Code
       runs-on: ubuntu-latest
-      
+      if: needs.Scan_Code.outputs.output1 == 'failure'
       steps:
       - name: Failed Slack Notification 
-        if: needs.Scan_Code.outputs.status == 'failure'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_TITLE: 'Scan failed - He YaLi'
           SLACK_MESSAGE: 'Failed trivy scan, see uploaded report'
-          SLACK_COLOR: ${{ needs.Scan_Code.outputs.status }}
+          SLACK_COLOR: ${{ needs.Scan_Code.outputs.output1 }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
     
       - name: Download text file
-        if: needs.Scan_Code.outputs.status == 'failure'
         uses: actions/download-artifact@v2
         with:
             name: trivy-report
             path: trivy-report
 
       - name: Slack Upload Trivy
-        if: needs.Scan_Code.outputs.status == 'failure'
         uses: MeilCli/slack-upload-file@v4
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
@@ -90,35 +89,30 @@ jobs:
   Slack_Success:  
         needs: Scan_Code
         runs-on: ubuntu-latest
+        if: needs.Scan_Code.outputs.output1 == 'success'
         steps:
           - name: Install Cosign
-            if: needs.Scan_Code.outputs.status == 'success'
             uses: sigstore/cosign-installer@v3.5.0
     
           - name: Set up QEMU
-            if: needs.Scan_Code.outputs.status == 'success'
             uses: docker/setup-qemu-action@v3
     
           - name: Set up Docker Buildx
-            if: needs.Scan_Code.outputs.status == 'success'
             uses: docker/setup-buildx-action@v3
     
           - name: Login to Docker Hub
-            if: needs.Scan_Code.outputs.status == 'success'
             uses: docker/login-action@v3
             with:
               username: ${{ secrets.DOCKERHUB_USERNAME }}
               password: ${{ secrets.DOCKERHUB_TOKEN }}
     
           - id: docker_meta
-            if: needs.Scan_Code.outputs.status == 'success'
             uses: docker/metadata-action@v4.4.0
             with:
               images: ghcr.io/sigstore/sample-honk
               tags: type=sha,format=long
     
           - name: Build and Push container images
-            if: needs.Scan_Code.outputs.status == 'success'
             uses: docker/build-push-action@v4.0.0
             id: build-and-push
             with:
@@ -126,7 +120,6 @@ jobs:
               tags: charliehe495/go-fortune:${{ github.sha }}
 
           - name: Sign the images with GitHub OIDC Token
-            if: needs.Scan_Code.outputs.status == 'success'
             env:
                 DIGEST: ${{ steps.build-and-push.outputs.digest }}
                 TAGS: charliehe495/go-fortune:${{ github.sha }}
@@ -140,7 +133,6 @@ jobs:
                 cosign sign --yes ${images}
 
           - name: Slack Notification When trivy success
-            if: needs.Scan_Code.outputs.status == 'success'
             uses: rtCamp/action-slack-notify@v2
             env:
                 SLACK_TITLE: 'Image build and signed'
@@ -151,5 +143,5 @@ jobs:
                     **Email**: [e1333156@u.nus.edu](e1333156@u.nus.edu) \n
                     **Git**: ${{ github.server_url }}/${{ github.repository }} \n
                     **Image**: [https://hub.docker.com/repository/docker/charliehe495/go-fortune/general](https://hub.docker.com/repository/docker/charliehe495/go-fortune/general)'
-                SLACK_COLOR: '${{ needs.Scan_Code.outputs.status }}'
+                SLACK_COLOR: '${{ needs.Scan_Code.outputs.output1 }}'
                 SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
