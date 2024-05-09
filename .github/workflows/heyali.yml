@@ -84,8 +84,8 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
-          file_path: 'trivy-report.txt'
-          initial_comment: 'Scan report by He YaLi'
+          file_path: trivy-report.txt
+          initial_comment: Scan report by He YaLi
      
   Slack_Success:  
         needs: Scan_Code
