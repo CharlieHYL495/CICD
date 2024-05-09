@@ -59,8 +59,8 @@ jobs:
    
   Slack_Failed:  
       needs: Scan_Code
-      if: needs.Scan_Code.outputs.status == 'failure'
       runs-on: ubuntu-latest
+      if: needs.Scan_Code.outputs.status == 'failure'
       steps:
       - name: Failed Slack Notification 
         uses: rtCamp/action-slack-notify@v2
@@ -86,8 +86,8 @@ jobs:
      
   Slack_Success:  
         needs: Scan_Code
-        if: needs.Scan_Code.outputs.status == 'success'
         runs-on: ubuntu-latest
+        if: needs.Scan_Code.outputs.status == 'success'
         steps:
           - name: Install Cosign
             uses: sigstore/cosign-installer@v3.5.0
@@ -141,5 +141,5 @@ jobs:
                     **Email**: [e1333156@u.nus.edu](e1333156@u.nus.edu) \n
                     **Git**: ${{ github.server_url }}/${{ github.repository }} \n
                     **Image**: [https://hub.docker.com/repository/docker/charliehe495/go-fortune/general](https://hub.docker.com/repository/docker/charliehe495/go-fortune/general)'
-                SLACK_COLOR: '${{ needs.Scan_Codeoutputs.status }}'
+                SLACK_COLOR: '${{ needs.Scan_Code.outputs.status }}'
                 SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}  
